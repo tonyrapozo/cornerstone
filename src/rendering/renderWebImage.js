@@ -1,6 +1,6 @@
 import setToPixelCoordinateSystem from '../setToPixelCoordinateSystem.js';
 import { renderColorImage } from './renderColorImage.js';
-
+import saveLastRendered from './saveLastRendered.js';
 /**
  * API function to draw a standard web image (PNG, JPG) to an enabledImage
  *
@@ -22,9 +22,9 @@ export function renderWebImage (enabledElement, invalidated) {
 
   // If the viewport ww/wc and invert all match the initial state of the image, we can draw the image
   // Directly. If any of those are changed, we call renderColorImage() to apply the lut
-  if (enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
+  /*if (enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
         enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
-        enabledElement.viewport.invert === false) {
+        enabledElement.viewport.invert === false) {*/
 
     // Get the canvas context and reset the transform
     const context = enabledElement.canvas.getContext('2d');
@@ -48,7 +48,9 @@ export function renderWebImage (enabledElement, invalidated) {
     const height = enabledElement.viewport.displayedArea.brhc.y - sy;
 
     context.drawImage(image.getImage(), sx, sy, width, height, 0, 0, width, height);
-  } else {
+
+    enabledElement.renderingTools = saveLastRendered(enabledElement);
+  /*} else {
     renderColorImage(enabledElement, invalidated);
-  }
+  }*/
 }

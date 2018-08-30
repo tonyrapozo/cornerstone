@@ -185,7 +185,6 @@ function generateTexture (image) {
   const imageData = dataUtilities[imageDataType].storedPixelDataToImageData(image, image.width, image.height);
 
   gl.texImage2D(gl.TEXTURE_2D, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, imageData);
-
   // Calculate the size in bytes of this image in memory
   const sizeInBytes = image.width * image.height * TEXTURE_BYTES[imageDataType];
 
