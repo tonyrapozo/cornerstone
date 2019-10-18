@@ -1,6 +1,6 @@
 {
   "name": "mv-cornerstone-core",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "HTML5 Medical Image Viewer Component",
   "main": "./dist/cornerstone.min.js",
   "keywords": [
@@ -18,7 +18,7 @@
   },
   "scripts": {
     "apidocs:generate": "npm run clean:docs && documentation build src/index.js -f md -c documentation.yml -o docs/api.md",
-    "build": "npm run test && npm run version && npm run webpack",
+    "build": "npm run version && npm run webpack",
     "clean": "npm run clean:dist && npm run clean:coverage",
     "clean:dist": "shx rm -rf dist",
     "clean:docs": "shx rm -f docs/api.md",

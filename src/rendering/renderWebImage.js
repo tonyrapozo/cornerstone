@@ -48,28 +48,26 @@ export function renderWebImage(enabledElement, invalidated) {
   const width = enabledElement.viewport.displayedArea.brhc.x - sx;
   const height = enabledElement.viewport.displayedArea.brhc.y - sy;
 
-  var image = image.getImage();
+  var imageRendered = image.getImage();
+
+  try{
+    context.drawImage(imageRendered, sx, sy, width, height, 0, 0, width, height);
+  }catch(exception){
+    context.drawImage(imageRendered, sx, sy, imageRendered.width, imageRendered.height, 0, 0, imageRendered.width, imageRendered.height);
+  }
 
   if (enabledElement.viewport.invert) {
-    image
+    var imgData = context.getImageData(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
+    var data = imgData.data;
+
+    for (var i = 0; i < data.length; i += 4) {
+      data[i] = 255 - data[i];
+      data[i + 1] = 255 - data[i + 1];
+      data[i + 2] = 255 - data[i + 2];
+    }
+
+    context.putImageData(imgData, 0, 0);
   }
-
-  context.drawImage(image, sx, sy, width, height, 0, 0, width, height);
-
-  var imgData = context.getImageData(0, 0, enabledElement.canvas.width, enabledElement.canvas.height);
-  var data = imgData.data;
-
-  for (var i = 0; i < data.length; i += 4) {
-    data[i] = 255 - data[i];
-    data[i + 1] = 255 - data[i + 1];
-    data[i + 2] = 255 - data[i + 2];
-  }
-
-  context.putImageData(imgData, 0, 0);
 
   enabledElement.renderingTools = saveLastRendered(enabledElement);
-
-  /*} else {
-    renderColorImage(enabledElement, invalidated);
-  }*/
 }
