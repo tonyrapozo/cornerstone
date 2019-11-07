@@ -21,12 +21,6 @@ export function renderWebImage(enabledElement, invalidated) {
     throw new Error('renderWebImage: image must be loaded before it can be drawn');
   }
 
-  // If the viewport ww/wc and invert all match the initial state of the image, we can draw the image
-  // Directly. If any of those are changed, we call renderColorImage() to apply the lut
-  /*if (enabledElement.viewport.voi.windowWidth === enabledElement.image.windowWidth &&
-        enabledElement.viewport.voi.windowCenter === enabledElement.image.windowCenter &&
-        enabledElement.viewport.invert === false) {*/
-
   // Get the canvas context and reset the transform
   const context = enabledElement.canvas.getContext('2d');
 
@@ -50,9 +44,21 @@ export function renderWebImage(enabledElement, invalidated) {
 
   var imageRendered = image.getImage();
 
-  try{
-    context.drawImage(imageRendered, sx, sy, width, height, 0, 0, width, height);
-  }catch(exception){
+  try {
+    if (imageRendered.width < enabledElement.viewport.displayedArea.brhc.x || 
+        imageRendered.height < enabledElement.viewport.displayedArea.brhc.y) {
+      var oc = document.createElement('canvas'),
+        octx = oc.getContext('2d');
+
+      oc.width = enabledElement.viewport.displayedArea.brhc.x;
+      oc.height = enabledElement.viewport.displayedArea.brhc.y;
+
+      octx.drawImage(imageRendered, 0, 0, oc.width, oc.height);
+      context.drawImage(oc, 0, 0, width, height, 0, 0, width, height);
+    } else {
+      context.drawImage(imageRendered, sx, sy, width, height, 0, 0, width, height);
+    }
+  } catch (exception) {
     context.drawImage(imageRendered, sx, sy, imageRendered.width, imageRendered.height, 0, 0, imageRendered.width, imageRendered.height);
   }
 
